@@ -14,16 +14,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.controlador.ControlTouch;
+import com.example.controlador.Hilo;
 import com.example.logica.Snake;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
     private Snake snake;
     private ControlTouch controlTouch;
     Dibujo dibujo;
+    private boolean fin=false;
+    private Hilo hilo;
 
 
     @Override
@@ -33,12 +37,22 @@ public class MainActivity extends AppCompatActivity {
 //--------------------------------------------------------------------------------
         this.dibujo = new Dibujo(this);
         this.controlTouch = new ControlTouch(this);
-        this.snake=new Snake();
+        this.snake=new Snake(this);
         this.snake.addObserver(this.dibujo);
         this.snake.newGame();
+
+
+
+
     }
 
-    public void moverSnake(String movimiento) {
-        this.snake.moverSnake(movimiento);
+
+    public boolean moverSnake(String movimiento) {
+        return this.snake.moverSnake(movimiento);
     }
+
+    public void changeSnake(String movimiento) {
+        this.snake.changeSnake(movimiento);
+    }
+
 }

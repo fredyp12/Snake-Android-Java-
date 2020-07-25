@@ -15,9 +15,11 @@ public class ControlTouch {
     public final static  String IZQUIERDA= "Izquierda";
 
     public MainActivity main;
+    private   String movimiento;
 
     public ControlTouch(MainActivity main) {
         this.main=main;
+        boolean fin=false;
 
         View fs = main.getWindow().getDecorView();
         fs.setOnTouchListener(new View.OnTouchListener() {
@@ -36,11 +38,15 @@ public class ControlTouch {
                 return false;
             }
         });
+
     }
+
+
     public void  movimiento(float x1,float x2,float y1, float y2) {
         float difX = x2-x1;
         float difY = y2-y1;
-        String movimiento;
+        boolean fin;
+
         if(Math.abs(difX) > Math.abs(difY)) {
             if(difX > 0) {
                 movimiento = ControlTouch.DERECHA;
@@ -56,7 +62,8 @@ public class ControlTouch {
             }
         }
         Toast.makeText(this.main.getApplicationContext(), movimiento, Toast.LENGTH_SHORT).show();
-        this.main.moverSnake(movimiento);
+        this.main.changeSnake(movimiento);
+//        this.main.moverSnake(movimiento);
     }
 
 }

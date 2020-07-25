@@ -65,8 +65,6 @@ public class Dibujo  implements Observer {
             for(int i=0;i<posicionAnterior.size();i++){
                 int segmento[]= new int[2];
                 segmento = (int[]) posicionAnterior.get(i);
-
-                this.textViewMatris[segmento[0]][segmento[1]].setText("");
                 this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.rgb(67, 129, 91));
             }
         }
@@ -74,10 +72,6 @@ public class Dibujo  implements Observer {
 
         for(int i=0;i<posicion.size();i++){
             int segmento[] = (int[]) posicion.get(i);
-            if(i==0) {
-                this.textViewMatris[segmento[0]][segmento[1]].setText(":");
-                this.textViewMatris[segmento[0]][segmento[1]].setTextScaleX(20);
-            }
             this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.RED);
         }
 
