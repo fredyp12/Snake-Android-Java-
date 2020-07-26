@@ -54,14 +54,14 @@ public class Snake extends Observable {
             public void run() {
                 try {
                     while(dat==false) {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
 
                         main.runOnUiThread(new Runnable() {
 
                             @Override
                             public void run(){
 //                            Toast.makeText(main.getApplicationContext(), "movimiento", Toast.LENGTH_SHORT).show();
-                               main.moverSnake(snakeBody.direccion);
+                               dat=main.moverSnake(snakeBody.direccion);
 //                                Log.d("Segmento1", snakeBody.getPosicion().size()+"  D");
 
                             }
@@ -80,11 +80,12 @@ public class Snake extends Observable {
         this.elemento= new ArrayList();
         boolean fin=false;
 
+
+
         ArrayList posicionAnterior = new ArrayList();
         for(int i=0;i<this.snakeBody.getPosicion().size(); i++) {
             int vec []= new  int[2];
             int vec1 [] = (int[]) this.snakeBody.getPosicion().get(i);
-            if(vec1[1]==0) return true;
             for (int j=0; j<2;j++){
                 vec[j]=vec1[j];
             }
@@ -92,31 +93,61 @@ public class Snake extends Observable {
         }
 
         if(this.snakeBody.moverSnake(movimiento, (ArrayList) this.elementoFood.get(0))) {
-            this.elemento.add(this.snakeBody.getPosicion());
-            this.elemento.add(posicionAnterior);
-            this.setChanged();
-            this.notifyObservers(this.elemento);
-//            si come
-            if(this.snakeBody.getPosicion().size()>posicionAnterior.size()) {
-                this.food.iniSeg(this.snakeBody.getPosicion());
-                this.elementoFood.set(0,this.food.getSegmento());
-                this.setChanged();
-                this.notifyObservers(this.elementoFood);
+
+            int [] salida;
+            int [] cabeza= new int[2];
+            for (int i=0;i<this.snakeBody.getPosicion().size();i++) {
+
+                salida= (int[]) this.snakeBody.getPosicion().get(i);
+                if(i==0) {
+                    cabeza=salida;
+                    if(cabeza[0]<0) {
+                        return fin=true;
+                    }
+                    if(cabeza[1]<0) {
+                        return fin=true;
+                    }
+                    if(cabeza[0]>=FILAS) {
+                        return fin=true;
+                    }
+                    if(cabeza[1]>=COLUMNAS) {
+                        return fin=true;
+                    }
+                }else {
+                    if(cabeza[0]==salida[0] && cabeza[1]==salida[1]) {
+                        this.elemento.add(posicionAnterior);
+                        this.setChanged();
+                        this.notifyObservers(this.elemento);
+                        return  fin=true;
+                    }
+                }
             }
+
+            if(fin!=true) {
+                this.elemento.add(this.snakeBody.getPosicion());
+                this.elemento.add(posicionAnterior);
+                this.setChanged();
+                this.notifyObservers(this.elemento);
+//            si come
+                if(this.snakeBody.getPosicion().size()>posicionAnterior.size()) {
+                    this.food.iniSeg(this.snakeBody.getPosicion());
+                    this.elementoFood.set(0,this.food.getSegmento());
+                    this.setChanged();
+                    this.notifyObservers(this.elementoFood);
+                }
+            }
+
         }
-
-
-
         return fin;
     }
 
     public void changeSnake(String movimiento) {
         if(movimiento==ControlTouch.ARRIBA) {
-            if(this.snakeBody.direccion!= ControlTouch.ARRIBA) {
+            if(this.snakeBody.direccion!= ControlTouch.ABAJO) {
                 this.snakeBody.direccion=movimiento;
             }
         }else if(movimiento==ControlTouch.ABAJO) {
-            if(this.snakeBody.direccion!=ControlTouch.ABAJO) {
+            if(this.snakeBody.direccion!=ControlTouch.ARRIBA) {
                 this.snakeBody.direccion=movimiento;
             }
         }else if(movimiento==ControlTouch.DERECHA) {

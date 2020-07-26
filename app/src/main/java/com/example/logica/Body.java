@@ -46,10 +46,6 @@ public class Body {
         return direccion;
     }
 
-    public boolean derecha(){
-
-        return  true;
-    }
 
 // Mueve las posiciones del arreglo
     public boolean moverSnake(String direccion, ArrayList comida)  {
@@ -57,7 +53,7 @@ public class Body {
         boolean comer=false;
         int [] notomar= new int[2];
 
-        int [] segementoAnterior = new int[0];
+        int [] segementoAnterior = new int[2];
         this.direccion=direccion;
         for(int i=0; i<this.direccionArray.size();i++) {
             this.segmento = new int[2];
@@ -71,51 +67,92 @@ public class Body {
 //                mover
                 this.direccionArray.set(0,direccion);
                 if(this.direccionArray.get(0)==ControlTouch.IZQUIERDA) {
-                    if(this.segmento[1]==0) return false;
+                    if(this.segmento[1]<0) return false;
                     else this.segmento[1]--;
                 }else if (this.direccionArray.get(0)==ControlTouch.DERECHA) {
-                    this.segmento[1]++;
+                     this.segmento[1]++;
                 }else if (this.direccionArray.get(0)==ControlTouch.ARRIBA) {
                     this.segmento[0]--;
                 }else if (this.direccionArray.get(0)==ControlTouch.ABAJO) {
                     this.segmento[0]++;
                 }
-                segementoAnterior= this.segmento;
+                segementoAnterior[0]= this.segmento[0];
+                segementoAnterior[1]= this.segmento[1];
             }else {
                 if(i==this.direccionArray.size()-1) {
                     notomar[0]=this.segmento[0];
                     notomar[1]=this.segmento[1];
                 }
+
                 if(this.direccionArray.get(i-1)!=this.direccionArray.get(i)) {
-                    if(this.direccionArray.get(i-1)==ControlTouch.ARRIBA) {
-                        if(this.segmento[0]-2==segementoAnterior[0]) {
-                            this.segmento[0]--;
-                            this.direccionArray.set(i,this.direccionArray.get(i-1));
-                        }else seguir((String) this.direccionArray.get(i));
 
-                    } else if(this.direccionArray.get(i-1)==ControlTouch.ABAJO) {
-                        if(this.segmento[0]+2==segementoAnterior[0]) {
-                            this.segmento[0]++;
-                            this.direccionArray.set(i,this.direccionArray.get(i-1));
-                        }else seguir((String) this.direccionArray.get(i));
+                    if(this.direccionArray.get(i-1)==ControlTouch.DERECHA && this.direccionArray.get(i)==ControlTouch.IZQUIERDA || this.direccionArray.get(i-1)==ControlTouch.IZQUIERDA && this.direccionArray.get(i)==ControlTouch.DERECHA) {
+                        if(segementoAnterior[0]==this.segmento[0]-1) {
+                            this.direccionArray.set(i,ControlTouch.ARRIBA);
+                            seguir((String) this.direccionArray.get(i));
+                        }else if(segementoAnterior[0]==this.segmento[0]+1) {
+                            this.direccionArray.set(i,ControlTouch.ABAJO);
+                            seguir((String) this.direccionArray.get(i));
+                        }
+                    }else if(this.direccionArray.get(i-1)==ControlTouch.ARRIBA && this.direccionArray.get(i)==ControlTouch.ABAJO || this.direccionArray.get(i-1)==ControlTouch.ABAJO && this.direccionArray.get(i)==ControlTouch.ARRIBA) {
+                        if(segementoAnterior[1]==this.segmento[1]-1) {
+                            this.direccionArray.set(i,ControlTouch.IZQUIERDA);
+                            seguir((String) this.direccionArray.get(i));
+                        }else if(segementoAnterior[1]==this.segmento[1]+1) {
+                            this.direccionArray.set(i,ControlTouch.DERECHA);
+                            seguir((String) this.direccionArray.get(i));
+                        }
+                    } else {
 
-                    }else if(this.direccionArray.get(i-1)==ControlTouch.DERECHA) {
-                        if(this.segmento[1]+2==segementoAnterior[1]) {
-                            this.segmento[1]++;
-                            this.direccionArray.set(i,this.direccionArray.get(i-1));
-                        }else seguir((String) this.direccionArray.get(i));
-                    }else if(this.direccionArray.get(i-1)==ControlTouch.IZQUIERDA) {
-                        if(this.segmento[1]-2==segementoAnterior[1]) {
-                            this.segmento[1]--;
-                            this.direccionArray.set(i,this.direccionArray.get(i-1));
-                        }else seguir((String) this.direccionArray.get(i));
+                        if(this.direccionArray.get(i-1)==ControlTouch.ARRIBA) {
+                            if(this.segmento[0]-2==segementoAnterior[0]) {
+                                this.segmento[0]--;
+                                this.direccionArray.set(i,this.direccionArray.get(i-1));
+                            }else seguir((String) this.direccionArray.get(i));
+
+                        } else if(this.direccionArray.get(i-1)==ControlTouch.ABAJO) {
+                            if(this.segmento[0]+2==segementoAnterior[0]) {
+                                this.segmento[0]++;
+                                this.direccionArray.set(i,this.direccionArray.get(i-1));
+                            }else seguir((String) this.direccionArray.get(i));
+
+                        }else if(this.direccionArray.get(i-1)==ControlTouch.DERECHA) {
+                            if(this.segmento[1]+2==segementoAnterior[1]) {
+                                this.segmento[1]++;
+                                this.direccionArray.set(i,this.direccionArray.get(i-1));
+                            }else seguir((String) this.direccionArray.get(i));
+                        }else if(this.direccionArray.get(i-1)==ControlTouch.IZQUIERDA) {
+                            if(this.segmento[1]-2==segementoAnterior[1]) {
+                                this.segmento[1]--;
+                                this.direccionArray.set(i,this.direccionArray.get(i-1));
+                            }else seguir((String) this.direccionArray.get(i));
+                        }
+
                     }
 
 
-                }else {
-                    seguir((String) this.direccionArray.get(i));
+
+                }else if(this.direccionArray.get(i)==ControlTouch.IZQUIERDA || this.direccionArray.get(i)==ControlTouch.DERECHA) {
+                    if(segementoAnterior[0]==this.segmento[0]-1) {
+                        this.direccionArray.set(i,ControlTouch.ARRIBA);
+                        seguir((String) this.direccionArray.get(i));
+                    }else if(segementoAnterior[0]==this.segmento[0]+1) {
+                        this.direccionArray.set(i,ControlTouch.ABAJO);
+                        seguir((String) this.direccionArray.get(i));
+                    }else seguir((String) this.direccionArray.get(i));
+                } else if(this.direccionArray.get(i)==ControlTouch.ARRIBA || this.direccionArray.get(i)==ControlTouch.ABAJO) {
+                    if(segementoAnterior[1]==this.segmento[1]-1) {
+                        this.direccionArray.set(i,ControlTouch.IZQUIERDA);
+                        seguir((String) this.direccionArray.get(i));
+                    }else if(segementoAnterior[1]==this.segmento[1]+1) {
+                        this.direccionArray.set(i,ControlTouch.DERECHA);
+                        seguir((String) this.direccionArray.get(i));
+                    } else seguir((String) this.direccionArray.get(i));
                 }
-                segementoAnterior=this.segmento;
+//                else seguir((String) this.direccionArray.get(i));
+
+                segementoAnterior[0]= this.segmento[0];
+                segementoAnterior[1]= this.segmento[1];
             }
             this.posicion.set(i,this.segmento);
 
