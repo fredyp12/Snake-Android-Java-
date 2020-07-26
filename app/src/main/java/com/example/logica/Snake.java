@@ -16,8 +16,12 @@ public class Snake extends Observable {
 
 
     int matris [][] =new int[Snake.FILAS][Snake.COLUMNAS];
-    private   Body snakeBody;
-    private  ArrayList elemento;
+    private Food food;
+    private Body snakeBody;
+
+    private ArrayList elemento;
+    private ArrayList elementoFood;
+
     private MainActivity main;
     private boolean dat=false;
 
@@ -30,8 +34,20 @@ public class Snake extends Observable {
         this.elemento = new ArrayList();
         this.snakeBody= new Body();
         this.elemento.add(this.snakeBody.getPosicion());
+        //notifica cuerpo
         this.setChanged();
         this.notifyObservers(this.elemento);
+
+//      crea food
+        this.elementoFood= new ArrayList();
+        food= new Food(this.snakeBody.getPosicion());
+        this.elementoFood.add(food.getSegmento());
+        this.elementoFood.add(food.getColor());
+        this.elementoFood.add(food.getPoint());
+        this.setChanged();
+        this.notifyObservers(this.elementoFood);
+
+
 
 //
         Thread hilo = new Thread() {
@@ -46,7 +62,7 @@ public class Snake extends Observable {
                             public void run(){
 //                            Toast.makeText(main.getApplicationContext(), "movimiento", Toast.LENGTH_SHORT).show();
                                main.moverSnake(snakeBody.direccion);
-                                Log.d("Segmento1", snakeBody.direccion+"  D");
+//                                Log.d("Segmento1", snakeBody.getPosicion().size()+"  D");
 
                             }
                         });
@@ -75,11 +91,18 @@ public class Snake extends Observable {
             posicionAnterior.add(vec);
         }
 
-        if(this.snakeBody.moverSnake(movimiento)) {
+        if(this.snakeBody.moverSnake(movimiento, (ArrayList) this.elementoFood.get(0))) {
             this.elemento.add(this.snakeBody.getPosicion());
             this.elemento.add(posicionAnterior);
             this.setChanged();
             this.notifyObservers(this.elemento);
+//            si come
+            if(this.snakeBody.getPosicion().size()>posicionAnterior.size()) {
+                this.food.iniSeg(this.snakeBody.getPosicion());
+                this.elementoFood.set(0,this.food.getSegmento());
+                this.setChanged();
+                this.notifyObservers(this.elementoFood);
+            }
         }
 
 

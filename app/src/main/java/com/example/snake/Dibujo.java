@@ -56,24 +56,39 @@ public class Dibujo  implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         ArrayList<Object>  elemento = (ArrayList <Object>) o;
-
-
         ArrayList posicion  = (ArrayList) elemento.get(0);
 
-        if(elemento.size()>1) {
-            ArrayList posicionAnterior = (ArrayList) elemento.get(1);
-            for(int i=0;i<posicionAnterior.size();i++){
-                int segmento[]= new int[2];
-                segmento = (int[]) posicionAnterior.get(i);
-                this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.rgb(67, 129, 91));
+        if(elemento.size()>2) {
+            int fila= (int) posicion.get(0);
+            int columna= (int) posicion.get(1);
+            int[] color= (int []) elemento.get(1);
+            this.textViewMatris[fila][columna].setBackgroundColor(Color.rgb(color[0],color[1],color[2]));
+        }
+        else {
+
+            if(elemento.size()>1) {
+                ArrayList posicionAnterior = (ArrayList) elemento.get(1);
+                for(int i=0;i<posicionAnterior.size();i++){
+                    int segmento[]= new int[2];
+                    segmento = (int[]) posicionAnterior.get(i);
+                    this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.rgb(67, 129, 91));
+                }
+            }
+
+
+            for(int i=0;i<posicion.size();i++){
+                int segmento[] = (int[]) posicion.get(i);
+                if(i==0) {
+                    this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.rgb(71, 68, 252 ));
+                }else {
+                    this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.RED);
+                }
+
             }
         }
 
 
-        for(int i=0;i<posicion.size();i++){
-            int segmento[] = (int[]) posicion.get(i);
-            this.textViewMatris[segmento[0]][segmento[1]].setBackgroundColor(Color.RED);
-        }
+
 
     }
 }
